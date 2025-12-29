@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+/* EventForce Design System - Mint/Teal Theme */
+
+@layer base {
+  :root {
+    --background: 160 20% 98%;
+    --foreground: 180 25% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 180 25% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 180 25% 15%;
+
+    --primary: 168 76% 42%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 168 45% 95%;
+    --secondary-foreground: 168 76% 32%;
+
+    --muted: 160 20% 94%;
+    --muted-foreground: 180 10% 45%;
+
+    --accent: 174 62% 47%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 168 30% 88%;
+    --input: 168 30% 88%;
+    --ring: 168 76% 42%;
+
+    --radius: 0.75rem;
+
+    /* Custom EventForce tokens */
+    --gradient-primary: linear-gradient(135deg, hsl(168, 76%, 42%) 0%, hsl(174, 62%, 47%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(160, 20%, 98%) 0%, hsl(168, 45%, 95%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 100%) 0%, hsl(168, 45%, 98%) 100%);
+    --shadow-soft: 0 4px 24px -4px hsl(168 76% 42% / 0.15);
+    --shadow-card: 0 8px 32px -8px hsl(180 25% 15% / 0.08);
+    --shadow-glow: 0 0 40px hsl(168 76% 42% / 0.25);
+
+    /* Role colors */
+    --organizer: 168 76% 42%;
+    --worker: 200 80% 50%;
+    --vendor: 280 65% 55%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 180 25% 25%;
+    --sidebar-primary: 168 76% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 168 45% 95%;
+    --sidebar-accent-foreground: 168 76% 32%;
+    --sidebar-border: 168 30% 88%;
+    --sidebar-ring: 168 76% 42%;
+  }
+
+  .dark {
+    --background: 180 25% 8%;
+    --foreground: 160 20% 95%;
+
+    --card: 180 20% 12%;
+    --card-foreground: 160 20% 95%;
+
+    --popover: 180 20% 12%;
+    --popover-foreground: 160 20% 95%;
+
+    --primary: 168 76% 50%;
+    --primary-foreground: 180 25% 8%;
+
+    --secondary: 180 20% 18%;
+    --secondary-foreground: 168 50% 70%;
+
+    --muted: 180 15% 18%;
+    --muted-foreground: 160 10% 60%;
+
+    --accent: 174 62% 55%;
+    --accent-foreground: 180 25% 8%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 180 15% 22%;
+    --input: 180 15% 22%;
+    --ring: 168 76% 50%;
+
+    --sidebar-background: 180 20% 10%;
+    --sidebar-foreground: 160 20% 90%;
+    --sidebar-primary: 168 76% 50%;
+    --sidebar-primary-foreground: 180 25% 8%;
+    --sidebar-accent: 180 15% 18%;
+    --sidebar-accent-foreground: 168 50% 70%;
+    --sidebar-border: 180 15% 22%;
+    --sidebar-ring: 168 76% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+@layer utilities {
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+  
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
