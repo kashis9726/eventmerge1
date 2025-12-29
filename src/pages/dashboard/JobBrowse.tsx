@@ -29,13 +29,21 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useEventContext } from "@/context/EventContext";
+import { useApplicationContext } from "@/context/ApplicationContext";
+import { useNotification } from "@/context/NotificationContext";
+import { useAuth } from "@/context/AuthContext";
 import { ThreeDGradientBackground } from "@/components/3DGradientBackground";
+import { useToast } from "@/hooks/use-toast";
 
 const cities = ["All Cities", "Mumbai", "Ahmedabad", "Vadodara", "Surat", "Gandhinagar"];
 const categories = ["All Categories", "Corporate Event", "Wedding", "Festival", "College Fest", "Government"];
 
 const JobBrowse = () => {
   const { events: jobs } = useEventContext();
+  const { addApplication, getApplicationsByWorker } = useApplicationContext();
+  const { addNotification } = useNotification();
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("All Cities");
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
@@ -46,6 +54,7 @@ const JobBrowse = () => {
     max: 10000,
   });
   const [workType, setWorkType] = useState<string>("All Types");
+  const [appliedJobs, setAppliedJobs] = useState<number[]>([]);
 
   const workTypes = [
     "All Types",
@@ -346,7 +355,7 @@ const JobBrowse = () => {
                     <div className="flex items-center gap-2 mb-2">
                       <h3 className="font-semibold text-foreground text-lg">{job.title}</h3>
                       {job.verified && (
-                        <Shield className="w-5 h-5 text-primary" title="Verified" />
+                        <Shield className="w-5 h-5 text-primary" />
                       )}
                     </div>
                     <p className="text-sm text-muted-foreground mb-2">{job.organizer}</p>
@@ -397,12 +406,46 @@ const JobBrowse = () => {
                   <Button 
                     variant="default" 
                     className="w-full bg-worker hover:bg-worker/90"
+                    disabled={appliedJobs.includes(job.id)}
                     onClick={() => {
-                      // In real app, this would add application
-                      alert(`Application submitted for ${job.title}`);
+                      if (!user) {
+                        toast({
+                          title: "Please login",
+                          description: "You need to be logged in to apply for events.",
+                          variant: "destructive",
+                        });
+                        return;
+                      }
+
+                      // Add application
+                      addApplication({
+                        eventId: job.id,
+                        eventTitle: job.title,
+                        workerId: parseInt(user.id) || 1,
+                        workerName: user.name || "Demo User",
+                        workerRating: 4.5,
+                        role: job.requirements[0] || "Volunteer",
+                        appliedDate: new Date().toISOString().split('T')[0],
+                        status: "pending",
+                      });
+
+                      // Add notification
+                      addNotification({
+                        type: "success",
+                        title: "Application Submitted!",
+                        message: `Your application for "${job.title}" has been submitted successfully.`,
+                        link: "/dashboard/worker/applications",
+                      });
+
+                      setAppliedJobs([...appliedJobs, job.id]);
+
+                      toast({
+                        title: "Application submitted!",
+                        description: `You have successfully applied for ${job.title}`,
+                      });
                     }}
                   >
-                      Apply Now
+                      {appliedJobs.includes(job.id) ? "Applied" : "Apply Now"}
                     </Button>
               </CardContent>
             </Card>

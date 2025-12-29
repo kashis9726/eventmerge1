@@ -232,3 +232,6 @@ const OrganizerEventApplications = () => {
 
 export default OrganizerEventApplications;
 
+
+
+

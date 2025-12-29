@@ -1,182 +1,167 @@
-# EventForce - Smart Event Hiring Platform
+# 🎉 EventMage (EventForce) - Event Management Platform
 
-A comprehensive platform connecting Event Organizers, Manpower/Workers, and Vendors for seamless event management.
+A comprehensive event management platform connecting Event Organizers, Manpower/Workers, and Vendors.
 
-## 🚀 Features
+## 🚀 Live Demo
 
-### For Event Organizers
-- **Post Events**: Create detailed event listings with requirements, budget, and specifications
-- **Manage Applications**: Review, accept, or reject worker applications
-- **Payment Tracking**: Track and manage payments to workers
-- **Event Management**: View all posted events with status tracking
+**GitHub Pages**: [View Live Site](https://yourusername.github.io/eventmage-1)
 
-### For Manpower/Workers
-- **Job Browsing**: Advanced filtering by location, category, payment range, work type
-- **Application Tracking**: Monitor application status (Pending, Accepted, Rejected)
-- **Payment History**: Track earnings and payment status
-- **XP System**: Level progression with verified expert badges
+**Demo Credentials**:
+- **Event Organizer**: `organizer@demo.com` / `demo123`
+- **Manpower/Worker**: `manpower@demo.com` / `demo123`
+- **Vendor**: `vendor@demo.com` / `demo123`
 
-### For Vendors/Suppliers
-- **Service Management**: List and manage your services
-- **Request Handling**: Receive and respond to service requests from organizers
-- **Booking Management**: Track confirmed bookings and revenue
+## ✨ Features
 
-## 🛠️ Tech Stack
+### 🎯 Multi-Role System
+- **Event Organizers**: Post events, manage applications, track payments
+- **Manpower/Workers**: Browse jobs, apply for events, track earnings
+- **Vendors/Suppliers**: List services, receive bookings
 
-- **React 18** with TypeScript
-- **Vite** for fast development and building
-- **Tailwind CSS** for styling
-- **Shadcn UI** components
-- **React Router** for navigation
-- **Framer Motion** for animations
-- **React Context** for state management
+### 📱 Key Features
+- ✅ User Authentication (Login/Register)
+- ✅ Role-based Dashboards
+- ✅ Event Posting & Browsing
+- ✅ Job Applications System
+- ✅ Real-time Notifications
+- ✅ Payment Tracking
+- ✅ Responsive Design
+- ✅ Demo Mode (Works without backend)
+
+## 🛠️ Technology Stack
+
+### Frontend
+- **React 18.3.1** - UI Framework
+- **TypeScript 5.8.3** - Type Safety
+- **Vite 5.4.19** - Build Tool
+- **React Router DOM 6.30.1** - Routing
+- **Tailwind CSS 3.4.17** - Styling
+- **Shadcn UI** - Component Library
+- **Framer Motion 12.23.26** - Animations
+- **TanStack Query 5.83.0** - Data Fetching
+
+### Backend (Ready for Implementation)
+- **Node.js** - Runtime
+- **Express.js** - Web Framework
+- **MongoDB** - Database
+- **Mongoose** - ODM
+- **JWT** - Authentication
+- **Bcrypt.js** - Password Hashing
 
 ## 📦 Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd eventmage-1
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/eventmage-1.git
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+# Navigate to project
+cd eventmage-1
 
-3. **Start development server**
-   ```bash
-   npm run dev
-   ```
+# Install dependencies
+npm install
 
-4. **Build for production**
-   ```bash
-   npm run build
-   ```
+# Start development server
+npm run dev
 
-5. **Preview production build**
-   ```bash
-   npm run preview
-   ```
+# Build for production
+npm run build
 
-## 🎯 Getting Started
+# Preview production build
+npm run preview
+```
 
-1. **Run the app locally**
-   ```bash
-   npm run dev
-   ```
-   The app will be available at `http://localhost:5173`
+## 🚀 Deployment
 
-2. **Test different user roles**
-   - **Organizer**: Login with email containing "organizer"
-   - **Vendor**: Login with email containing "vendor"
-   - **Worker**: Login with any other email
+### GitHub Pages
+```bash
+npm run deploy
+```
+
+### Vercel (Recommended)
+1. Push to GitHub
+2. Import project in Vercel
+3. Auto-deploys!
+
+See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed instructions.
 
 ## 📁 Project Structure
 
 ```
 src/
 ├── components/          # Reusable UI components
-│   ├── 3DBackground.tsx    # 3D animated background
-│   ├── layout/         # Layout components
-│   └── ui/             # Shadcn UI components
+│   ├── layout/         # Header, Footer
+│   ├── ui/             # Shadcn UI components
+│   └── NotificationDropdown.tsx
 ├── context/            # React Context providers
+│   ├── AuthContext.tsx
 │   ├── EventContext.tsx
-│   └── ApplicationContext.tsx
+│   ├── ApplicationContext.tsx
+│   └── NotificationContext.tsx
 ├── pages/              # Page components
-│   ├── dashboard/      # Dashboard pages for each role
+│   ├── dashboard/      # Dashboard pages
 │   ├── Login.tsx
 │   ├── Register.tsx
 │   └── PostEvent.tsx
-├── hooks/              # Custom React hooks
-└── lib/                # Utility functions
+├── lib/                # Utility functions
+└── hooks/              # Custom React hooks
 ```
 
-## 🔧 Available Scripts
+## 🎯 Real Event Examples
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+- **PSI Exam - Biometric Volunteers** (Government)
+- **Police Constable Exam Volunteers** (Government)
+- **Inter-College Cricket Tournament** (Tournament)
+- **College Fest Volunteers** (College Event)
+- **Tech Startup Expo** (Corporate)
 
-## 🌐 Deployment
+## 🔐 Security
 
-### Deploy to Vercel
+- Password hashing with Bcrypt
+- JWT token-based authentication
+- Role-based access control
+- Input validation
+- Secure API endpoints
 
-1. Install Vercel CLI
-   ```bash
-   npm i -g vercel
-   ```
+## 📚 Documentation
 
-2. Deploy
-   ```bash
-   vercel
-   ```
+- [Viva Preparation Guide](./VIVA_PREPARATION.md) - Complete technical documentation
+- [Deployment Guide](./DEPLOYMENT_GUIDE.md) - Step-by-step deployment
+- [Demo Credentials](./DEMO_CREDENTIALS.md) - Test accounts
 
-### Deploy to Netlify
+## 🚧 Future Enhancements
 
-1. Install Netlify CLI
-   ```bash
-   npm i -g netlify-cli
-   ```
+- [ ] Real-time messaging (Socket.io)
+- [ ] Payment gateway integration (Razorpay/Stripe)
+- [ ] Email notifications
+- [ ] File uploads
+- [ ] Advanced search & filters
+- [ ] Rating & review system
 
-2. Deploy
-   ```bash
-   netlify deploy --prod
-   ```
+## 👨‍💻 Development
 
-### Deploy to GitHub Pages
+```bash
+# Development server
+npm run dev
 
-1. Install gh-pages
-   ```bash
-   npm install --save-dev gh-pages
-   ```
+# Build
+npm run build
 
-2. Add to package.json
-   ```json
-   "scripts": {
-     "predeploy": "npm run build",
-     "deploy": "gh-pages -d dist"
-   }
-   ```
-
-3. Deploy
-   ```bash
-   npm run deploy
-   ```
-
-## 📝 Environment Variables
-
-Create a `.env` file for environment-specific variables (if needed in future):
-
-```env
-VITE_API_URL=your_api_url
-VITE_APP_NAME=EventForce
+# Lint
+npm run lint
 ```
+
+## 📝 License
+
+This project is open source and available under the MIT License.
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Contributions, issues, and feature requests are welcome!
 
-## 📄 License
+## 📧 Contact
 
-This project is licensed under the MIT License.
-
-## 👨‍💻 Author
-
-EventForce Team
-
-## 🙏 Acknowledgments
-
-- Shadcn UI for beautiful components
-- Vite for blazing fast builds
-- React community for amazing tools
+For questions or support, please open an issue on GitHub.
 
 ---
 
-**Built with ❤️ using React + TypeScript + Vite**
-
+**Built with ❤️ using React, TypeScript, and Tailwind CSS**

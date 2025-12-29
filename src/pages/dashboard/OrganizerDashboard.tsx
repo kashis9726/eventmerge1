@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { ThreeDGradientBackground } from "@/components/3DGradientBackground";
 import { useApplicationContext } from "@/context/ApplicationContext";
+import { NotificationDropdown } from "@/components/NotificationDropdown";
 
 const stats = [
   { label: "Active Events", value: "5", icon: Calendar, color: "text-blue-500", subtext: "Ongoing events" },
@@ -103,10 +104,7 @@ const OrganizerDashboard = () => {
               </Link>
             </div>
             <div className="flex items-center gap-4">
-              <button className="relative p-2 rounded-lg hover:bg-secondary transition-colors">
-                <Bell className="w-5 h-5 text-muted-foreground" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full" />
-              </button>
+              <NotificationDropdown />
               <button className="p-2 rounded-lg hover:bg-secondary transition-colors">
                 <MessageCircle className="w-5 h-5 text-muted-foreground" />
               </button>

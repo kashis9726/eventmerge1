@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { motion } from "framer-motion";
 import {
-  Bell,
   LogOut,
   Zap,
   IndianRupee,
@@ -20,6 +19,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { ThreeDGradientBackground } from "@/components/3DGradientBackground";
+import { NotificationDropdown } from "@/components/NotificationDropdown";
 
 const stats = [
   {
@@ -89,9 +89,7 @@ const WorkerDashboard = () => {
               </Link>
             </div>
             <div className="flex items-center gap-4">
-              <button className="relative p-2 rounded-lg hover:bg-secondary transition-colors">
-                <Bell className="w-5 h-5 text-muted-foreground" />
-              </button>
+              <NotificationDropdown />
               <button className="p-2 rounded-lg hover:bg-secondary transition-colors">
                 <MessageCircle className="w-5 h-5 text-muted-foreground" />
               </button>

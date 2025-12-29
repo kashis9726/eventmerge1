@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,10 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/context/AuthContext";
+import { DEMO_CREDENTIALS } from "@/lib/demoCredentials";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 type Role = "organizer" | "worker" | "vendor";
 
@@ -54,6 +58,7 @@ const Register = () => {
   const initialRole = searchParams.get("role") as Role | null;
   const [selectedRole, setSelectedRole] = useState<Role | null>(initialRole);
   const [step, setStep] = useState(initialRole ? 2 : 1);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -62,6 +67,8 @@ const Register = () => {
     confirmPassword: "",
   });
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { login, loginDemo } = useAuth();
 
   const handleRoleSelect = (role: Role) => {
     setSelectedRole(role);
@@ -72,8 +79,9 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: "Passwords don't match",
@@ -82,10 +90,112 @@ const Register = () => {
       });
       return;
     }
-    toast({
-      title: "Account created!",
-      description: "Welcome to EventForce. Please login to continue.",
-    });
+
+    if (!selectedRole) {
+      toast({
+        title: "Please select a role",
+        description: "You must select a role to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    // Map frontend role to backend role
+    // Frontend uses "worker" but backend uses "manpower"
+    const backendRole = selectedRole === "worker" ? "manpower" : selectedRole;
+
+    // Try API registration first
+    try {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.fullName,
+          email: formData.email,
+          password: formData.password,
+          role: backendRole,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.msg || "Registration failed");
+      }
+
+      // Store token and update auth context
+      login(data.token);
+
+      // Decode token to get user role
+      const base64Url = data.token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+      const decoded = JSON.parse(jsonPayload);
+      const userRole = decoded.user.role;
+
+      // Redirect based on actual user role
+      if (userRole === "organizer") {
+        navigate("/dashboard/organizer");
+      } else if (userRole === "vendor") {
+        navigate("/dashboard/vendor");
+      } else if (userRole === "manpower") {
+        navigate("/dashboard/worker");
+      } else {
+        navigate("/dashboard/worker");
+      }
+
+      toast({
+        title: "Account created!",
+        description: "Welcome to EventForce. You have been logged in.",
+      });
+    } catch (error: any) {
+      // If API fails, use demo mode
+      console.warn("Backend not available, using demo mode:", error);
+      
+      // Use demo mode with the selected role
+      const demoRole = backendRole === "manpower" ? "manpower" : backendRole;
+      const demoCred = DEMO_CREDENTIALS[demoRole as keyof typeof DEMO_CREDENTIALS];
+      
+      if (demoCred) {
+        loginDemo({
+          id: `demo-${demoRole}-${Date.now()}`,
+          role: demoCred.role,
+          name: formData.fullName,
+          email: formData.email,
+        });
+
+        // Redirect based on role
+        if (demoCred.role === "organizer") {
+          navigate("/dashboard/organizer");
+        } else if (demoCred.role === "vendor") {
+          navigate("/dashboard/vendor");
+        } else {
+          navigate("/dashboard/worker");
+        }
+
+        toast({
+          title: "Account created! (Demo Mode)",
+          description: "Backend not available. Using demo mode. You can test all features!",
+        });
+      } else {
+        toast({
+          title: "Registration failed",
+          description: error.message || "Backend not available and demo mode failed. Please try demo login instead.",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const selectedRoleData = roles.find((r) => r.id === selectedRole);
@@ -269,11 +379,47 @@ const Register = () => {
                       </div>
                     </div>
 
-                    <Button type="submit" variant="hero" className="w-full" size="lg">
-                      Create Account
-                      <ArrowRight className="w-5 h-5" />
+                    <Button 
+                      type="submit" 
+                      variant="hero" 
+                      className="w-full" 
+                      size="lg"
+                      disabled={loading}
+                    >
+                      {loading ? "Creating account..." : "Create Account"}
+                      {!loading && <ArrowRight className="w-5 h-5" />}
                     </Button>
                   </form>
+
+                  {/* Demo Credentials Info */}
+                  <div className="mt-6 p-4 bg-secondary/50 rounded-xl border border-border">
+                    <p className="text-xs font-semibold text-foreground mb-2 text-center">
+                      💡 Demo Mode Available
+                    </p>
+                    <p className="text-xs text-muted-foreground text-center mb-3">
+                      If backend is not available, registration will automatically use demo mode. You can also use demo credentials to login:
+                    </p>
+                    <div className="space-y-1.5">
+                      {Object.entries(DEMO_CREDENTIALS).map(([key, cred]) => (
+                        <div
+                          key={key}
+                          className="flex items-center justify-between p-2 bg-background rounded text-xs"
+                        >
+                          <div className="flex-1">
+                            <span className="font-medium capitalize">{key}:</span>{" "}
+                            <span className="text-muted-foreground">
+                              {cred.email} / {cred.password}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground text-center mt-3">
+                      <Link to="/login" className="text-primary hover:underline">
+                        Or login with demo credentials →
+                      </Link>
+                    </p>
+                  </div>
 
                   <p className="text-center text-muted-foreground text-sm mt-6">
                     Already have an account?{" "}
