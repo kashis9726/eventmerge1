@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, MapPin, Users, Send, MessageCircle } from "lucide-react";
+import { ThreeDGradientBackground } from "@/components/3DGradientBackground";
 
 interface Request {
   id: number;
@@ -41,8 +42,9 @@ const requests: Request[] = [
 
 const VendorNewRequests = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+    <div className="min-h-screen bg-background relative">
+      <ThreeDGradientBackground />
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border relative">
         <div className="container mx-auto px-6 py-4">
           <Link
             to="/dashboard/vendor"
@@ -55,7 +57,7 @@ const VendorNewRequests = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-6 py-8 relative z-10">
         <Card>
           <CardHeader>
             <CardTitle>Event Service Requests</CardTitle>

@@ -16,6 +16,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { Calendar, MapPin, IndianRupee, Users, Briefcase, ChevronLeft, Clock } from "lucide-react";
+import { ThreeDGradientBackground } from "@/components/3DGradientBackground";
 
 import { useEventContext } from "@/context/EventContext";
 
@@ -31,6 +32,12 @@ const PostEvent = () => {
 
         const formData = new FormData(e.target as HTMLFormElement);
 
+        // Parse requirements from description or separate field
+        const description = (formData.get("description") as string) || "";
+        const workersNeeded = parseInt(formData.get("workersNeeded") as string) || 1;
+        const budget = Number(formData.get("budget")) || 0;
+        const roles = (formData.get("roles") as string)?.split(',').map(r => r.trim()) || [];
+
         // Simulate API delay
         setTimeout(() => {
             addEvent({
@@ -38,14 +45,17 @@ const PostEvent = () => {
                 organizer: "Current Organizer", // In a real app, from auth context
                 category: formData.get("category") as string || "General",
                 date: formData.get("date") as string || "TBD",
-                duration: "8 hours", // Defaulting for now
+                duration: formData.get("duration") as string || "8 hours",
                 location: formData.get("location") as string || "TBD",
-                payment: `₹${formData.get("budget")}/day`,
-                requirements: (formData.get("description") as string)?.split('\n') || ["General Labor"],
-                benefits: ["Meals (Standard)"],
+                payment: `₹${budget}/day`,
+                requirements: roles.length > 0 ? roles : 
+                    description ? description.split('\n').filter(line => line.trim()) : 
+                    ["General Labor"],
+                benefits: (formData.get("benefits") as string)?.split(',').map(b => b.trim()) || ["Meals included"],
                 verified: true,
-                urgent: true,
-                highPay: Number(formData.get("budget")) > 3000,
+                urgent: formData.get("urgent") === "on",
+                highPay: budget > 3000,
+                description: description,
             });
 
             setLoading(false);
@@ -58,9 +68,10 @@ const PostEvent = () => {
     };
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen bg-background relative">
+            <ThreeDGradientBackground />
             <Header />
-            <main className="pt-24 pb-16">
+            <main className="pt-24 pb-16 relative z-10">
                 <div className="container mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -143,12 +154,63 @@ const PostEvent = () => {
                                         </div>
                                     </div>
 
-                                    <div className="space-y-2">
-                                        <Label htmlFor="budget">Total Budget</Label>
-                                        <div className="relative">
-                                            <IndianRupee className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
-                                            <Input name="budget" id="budget" placeholder="e.g., 50000" type="number" className="pl-10" />
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="budget">Total Budget (₹)</Label>
+                                            <div className="relative">
+                                                <IndianRupee className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                                                <Input name="budget" id="budget" placeholder="e.g., 50000" type="number" className="pl-10" />
+                                            </div>
                                         </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="workersNeeded">Workers Needed</Label>
+                                            <div className="relative">
+                                                <Users className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                                                <Input name="workersNeeded" id="workersNeeded" placeholder="e.g., 10" type="number" className="pl-10" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="duration">Event Duration</Label>
+                                        <div className="relative">
+                                            <Clock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                                            <Input name="duration" id="duration" placeholder="e.g., 8 hours" className="pl-10" />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="roles">Required Roles (comma-separated)</Label>
+                                        <Input 
+                                            name="roles" 
+                                            id="roles" 
+                                            placeholder="e.g., Server, Decorator, Photographer" 
+                                        />
+                                        <p className="text-xs text-muted-foreground">
+                                            Separate multiple roles with commas
+                                        </p>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="benefits">Benefits (comma-separated)</Label>
+                                        <Input 
+                                            name="benefits" 
+                                            id="benefits" 
+                                            placeholder="e.g., Meals included, Transport provided" 
+                                        />
+                                    </div>
+
+                                    <div className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            id="urgent"
+                                            name="urgent"
+                                            className="w-4 h-4 rounded border-gray-300"
+                                        />
+                                        <Label htmlFor="urgent" className="text-sm font-normal">
+                                            Mark as Urgent
+                                        </Label>
                                     </div>
                                 </div>
 

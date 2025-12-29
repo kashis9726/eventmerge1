@@ -26,6 +26,8 @@ import {
   Package,
   ShoppingCart,
 } from "lucide-react";
+import { ThreeDGradientBackground } from "@/components/3DGradientBackground";
+import { useApplicationContext } from "@/context/ApplicationContext";
 
 const stats = [
   { label: "Active Events", value: "5", icon: Calendar, color: "text-blue-500", subtext: "Ongoing events" },
@@ -80,11 +82,13 @@ const recentApplications = [
 const OrganizerDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const navigate = useNavigate();
+  const { applications } = useApplicationContext();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <ThreeDGradientBackground />
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border relative">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -122,7 +126,7 @@ const OrganizerDashboard = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-6 py-8 relative z-10">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
@@ -289,40 +293,14 @@ const OrganizerDashboard = () => {
                   </Button>
                 </Link>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {events.map((event) => (
-                  <div
-                    key={event.id}
-                    className="p-4 rounded-xl border border-border hover:border-primary/30 hover:bg-secondary/30 transition-colors"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-semibold text-foreground">{event.title}</h4>
-                          <Badge variant={event.status === "active" ? "default" : "secondary"}>
-                            {event.status}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground">{event.category}</p>
-                      </div>
-                      <span className="text-lg font-bold text-primary">{event.budget}</span>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        {event.date}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <MapPin className="w-4 h-4" />
-                        {event.location}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
-                        {event.applications}/{event.workersNeeded} applied
-                      </span>
-                    </div>
-                  </div>
-                ))}
+              <CardContent>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => navigate("/dashboard/organizer/events")}
+                >
+                  View All Events & Manage Applications
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>

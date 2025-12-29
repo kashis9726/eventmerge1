@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Search, CheckCircle2, Clock, AlertCircle, IndianRupee } from "lucide-react";
+import { ThreeDGradientBackground } from "@/components/3DGradientBackground";
 
 interface Payment {
   id: string;
@@ -131,8 +132,9 @@ const WorkerPayments = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+    <div className="min-h-screen bg-background relative">
+      <ThreeDGradientBackground />
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border relative">
         <div className="container mx-auto px-6 py-4">
           <Link
             to="/dashboard/worker"
@@ -145,7 +147,7 @@ const WorkerPayments = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-6 py-8 relative z-10">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat, index) => (

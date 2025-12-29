@@ -11,6 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
 import {
   Search,
@@ -26,6 +29,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useEventContext } from "@/context/EventContext";
+import { ThreeDGradientBackground } from "@/components/3DGradientBackground";
 
 const cities = ["All Cities", "Mumbai", "Ahmedabad", "Vadodara", "Surat", "Gandhinagar"];
 const categories = ["All Categories", "Corporate Event", "Wedding", "Festival", "College Fest", "Government"];
@@ -34,9 +38,28 @@ const JobBrowse = () => {
   const { events: jobs } = useEventContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("All Cities");
-  const [selectedCategory, setSelectedCategory] = useState("Festival");
+  const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState("available");
+  const [paymentRange, setPaymentRange] = useState<{ min: number; max: number }>({
+    min: 0,
+    max: 10000,
+  });
+  const [workType, setWorkType] = useState<string>("All Types");
+
+  const workTypes = [
+    "All Types",
+    "Server",
+    "Decorator",
+    "Photographer",
+    "Coordinator",
+    "Security",
+    "Tech Support",
+    "Setup Crew",
+    "Stage Manager",
+    "Waiter",
+    "Volunteer",
+  ];
 
   const toggleFilter = (filter: string) => {
     setActiveFilters((prev) =>
@@ -44,15 +67,26 @@ const JobBrowse = () => {
     );
   };
 
+  const extractPayment = (paymentStr: string): number => {
+    const match = paymentStr.match(/₹?([\d,]+)/);
+    if (match) {
+      return parseInt(match[1].replace(/,/g, ""));
+    }
+    return 0;
+  };
+
   const filteredJobs = jobs.filter((job) => {
     const matchesSearch =
       job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.category.toLowerCase().includes(searchQuery.toLowerCase());
+      job.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.requirements.some((req) =>
+        req.toLowerCase().includes(searchQuery.toLowerCase())
+      );
 
     const matchesCity = selectedCity === "All Cities" || job.location.includes(selectedCity);
     const matchesCategory =
-      selectedCategory === "All Categories" || job.category.includes(selectedCategory);
+      selectedCategory === "All Categories" || job.category === selectedCategory;
 
     const matchesFilters =
       activeFilters.length === 0 ||
@@ -63,12 +97,33 @@ const JobBrowse = () => {
         return true;
       });
 
-    return matchesSearch && matchesCity && matchesCategory && matchesFilters;
+    // Filter by payment range
+    const jobPayment = extractPayment(job.payment);
+    const matchesPayment =
+      jobPayment >= paymentRange.min && jobPayment <= paymentRange.max;
+
+    // Filter by work type (check requirements)
+    const matchesWorkType =
+      workType === "All Types" ||
+      job.requirements.some((req) =>
+        req.toLowerCase().includes(workType.toLowerCase())
+      ) ||
+      job.title.toLowerCase().includes(workType.toLowerCase());
+
+    return (
+      matchesSearch &&
+      matchesCity &&
+      matchesCategory &&
+      matchesFilters &&
+      matchesPayment &&
+      matchesWorkType
+    );
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white relative">
+      <ThreeDGradientBackground />
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border relative">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link to="/dashboard/worker" className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
@@ -84,7 +139,7 @@ const JobBrowse = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-6 py-8 relative z-10">
         {/* Search Bar */}
         <div className="mb-6">
           <div className="flex gap-4 mb-4">
@@ -97,10 +152,55 @@ const JobBrowse = () => {
                 className="pl-10 h-12 rounded-xl"
               />
             </div>
-            <Button variant="default" className="bg-green-600 hover:bg-green-700 gap-2">
-              <Filter className="w-4 h-4" />
-              Advanced Filters
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="default" className="bg-green-600 hover:bg-green-700 gap-2">
+                  <Filter className="w-4 h-4" />
+                  Advanced Filters
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Advanced Filters</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6 py-4">
+                  <div className="space-y-2">
+                    <Label>Payment Range (₹)</Label>
+                    <div className="px-2">
+                      <Slider
+                        value={[paymentRange.min, paymentRange.max]}
+                        onValueChange={(values) =>
+                          setPaymentRange({ min: values[0], max: values[1] })
+                        }
+                        min={0}
+                        max={10000}
+                        step={500}
+                        className="w-full"
+                      />
+                    </div>
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>₹{paymentRange.min}</span>
+                      <span>₹{paymentRange.max}</span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Work Type</Label>
+                    <Select value={workType} onValueChange={setWorkType}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {workTypes.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
 
           {/* Filter Row */}
@@ -126,6 +226,19 @@ const JobBrowse = () => {
                 {categories.map((category) => (
                   <SelectItem key={category} value={category}>
                     {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={workType} onValueChange={setWorkType}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder="Work Type" />
+              </SelectTrigger>
+              <SelectContent>
+                {workTypes.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -176,8 +289,8 @@ const JobBrowse = () => {
             >
               Available ({filteredJobs.length})
             </button>
-            <button
-              onClick={() => setActiveTab("applications")}
+            <Link
+              to="/dashboard/worker/applications"
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 activeTab === "applications"
                   ? "bg-green-500 text-white"
@@ -185,7 +298,7 @@ const JobBrowse = () => {
               }`}
             >
               Applications (2)
-            </button>
+            </Link>
             <button
               onClick={() => setActiveTab("history")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -281,9 +394,16 @@ const JobBrowse = () => {
                   </div>
                 </div>
 
-                <Button variant="default" className="w-full bg-worker hover:bg-worker/90">
-                  Apply Now
-                </Button>
+                  <Button 
+                    variant="default" 
+                    className="w-full bg-worker hover:bg-worker/90"
+                    onClick={() => {
+                      // In real app, this would add application
+                      alert(`Application submitted for ${job.title}`);
+                    }}
+                  >
+                      Apply Now
+                    </Button>
               </CardContent>
             </Card>
           ))}

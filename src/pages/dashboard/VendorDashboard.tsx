@@ -22,6 +22,7 @@ import {
   Plus,
   DollarSign,
 } from "lucide-react";
+import { ThreeDGradientBackground } from "@/components/3DGradientBackground";
 
 const stats = [
   { label: "Total Services", value: "2", icon: Package, color: "text-blue-500", subtext: "Active listings" },
@@ -79,9 +80,10 @@ const VendorDashboard = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <ThreeDGradientBackground />
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border relative">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -119,7 +121,7 @@ const VendorDashboard = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-6 py-8 relative z-10">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">

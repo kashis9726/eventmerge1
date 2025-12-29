@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Header } from "@/components/layout/Header";
+import { ThreeDGradientBackground } from "@/components/3DGradientBackground";
 import {
     ChevronLeft,
     Search,
@@ -105,9 +106,10 @@ const PaymentTracker = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen bg-background relative">
+            <ThreeDGradientBackground />
             <Header />
-            <main className="pt-24 pb-16 px-6">
+            <main className="pt-24 pb-16 px-6 relative z-10">
                 <div className="max-w-7xl mx-auto">
                     <Link
                         to="/dashboard/organizer"

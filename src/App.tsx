@@ -18,13 +18,18 @@ import JobBrowse from "./pages/dashboard/JobBrowse";
 import WorkerPayments from "./pages/dashboard/WorkerPayments";
 import VendorMyServices from "./pages/dashboard/VendorMyServices";
 import VendorNewRequests from "./pages/dashboard/VendorNewRequests";
+import OrganizerEvents from "./pages/dashboard/OrganizerEvents";
+import OrganizerEventApplications from "./pages/dashboard/OrganizerEventApplications";
+import WorkerApplications from "./pages/dashboard/WorkerApplications";
 
 import { EventProvider } from "./context/EventContext";
+import { ApplicationProvider } from "./context/ApplicationContext";
 const queryClient = new QueryClient();
 
 const App = () => (
   <EventProvider>
-    <QueryClientProvider client={queryClient}>
+    <ApplicationProvider>
+      <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -38,9 +43,12 @@ const App = () => (
             <Route path="/post-event" element={<PostEvent />} />
             <Route path="/dashboard/organizer" element={<OrganizerDashboard />} />
             <Route path="/dashboard/organizer/payments" element={<PaymentTracker />} />
+            <Route path="/dashboard/organizer/events" element={<OrganizerEvents />} />
+            <Route path="/dashboard/organizer/events/:id/applications" element={<OrganizerEventApplications />} />
             <Route path="/dashboard/worker" element={<WorkerDashboard />} />
             <Route path="/dashboard/worker/jobs" element={<JobBrowse />} />
             <Route path="/dashboard/worker/payments" element={<WorkerPayments />} />
+            <Route path="/dashboard/worker/applications" element={<WorkerApplications />} />
             <Route path="/dashboard/vendor" element={<VendorDashboard />} />
             <Route path="/dashboard/vendor/services" element={<VendorMyServices />} />
             <Route path="/dashboard/vendor/requests" element={<VendorNewRequests />} />
@@ -49,6 +57,7 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
+    </ApplicationProvider>
   </EventProvider>
 );
 

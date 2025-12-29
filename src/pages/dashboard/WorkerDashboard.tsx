@@ -19,6 +19,7 @@ import {
   Wallet,
   TrendingUp,
 } from "lucide-react";
+import { ThreeDGradientBackground } from "@/components/3DGradientBackground";
 
 const stats = [
   {
@@ -70,9 +71,10 @@ const WorkerDashboard = () => {
   const xpToNextLevel = maxXP - currentXP;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white relative">
+      <ThreeDGradientBackground />
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border relative">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -109,7 +111,7 @@ const WorkerDashboard = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-6 py-8 relative z-10">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-2">
@@ -191,7 +193,7 @@ const WorkerDashboard = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="border-border hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/dashboard/worker/jobs")}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -200,6 +202,18 @@ const WorkerDashboard = () => {
                   <p className="text-sm text-muted-foreground">Find new opportunities matching your skills</p>
                 </div>
                 <Briefcase className="w-12 h-12 text-worker opacity-50" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/dashboard/worker/applications")}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">My Applications</h3>
+                  <p className="text-sm text-muted-foreground">Track your job applications status</p>
+                </div>
+                <CheckCircle2 className="w-12 h-12 text-blue-500 opacity-50" />
               </div>
             </CardContent>
           </Card>
